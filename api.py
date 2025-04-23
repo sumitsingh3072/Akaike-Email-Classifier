@@ -30,11 +30,11 @@ def classify_email(request: EmailRequest) -> dict:
     logger.debug(f"Masked email: {masked_email}")
     logger.debug(f"Masked entities: {entities}")
 
-    # category with local model
+    # Category with local model
     category = predict_category(model, masked_email)
     logger.info(f"Predicted category: {category}")
 
-    #Restore PII in masked email
+    # Restore PII in masked email
     demasked_email = restore_pii(masked_email, entities)
 
     return {

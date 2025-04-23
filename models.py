@@ -6,17 +6,24 @@ from sklearn.metrics import classification_report
 import joblib
 import pandas as pd
 
-# Train and save model pipeline
+
 def train_email_classifier(csv_path: str):
     df = pd.read_csv(csv_path)
     X = df['email']
     y = df['type']
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
     model = Pipeline([
-        ('tfidf', TfidfVectorizer(stop_words='english', max_features=10000)),
-        ('clf', LogisticRegression(max_iter=1000))
+        (
+            'tfidf',
+            TfidfVectorizer(
+                stop_words='english', max_features=10000
+            ),
+        ),
+        ('clf', LogisticRegression(max_iter=1000)),
     ])
 
     model.fit(X_train, y_train)
@@ -28,10 +35,14 @@ def train_email_classifier(csv_path: str):
     joblib.dump(model, 'email_classifier.pkl')
     print("\nModel saved as 'email_classifier.pkl'")
 
-# Load and predict
+
+# Load and predict functions
 
 def load_model():
+    """Load and return the trained email classification model."""
     return joblib.load('email_classifier.pkl')
 
-def predict_category(model, text):
+
+def predict_category(model, text: str) -> str:
+    """Predict the category for the given email text."""
     return model.predict([text])[0]
