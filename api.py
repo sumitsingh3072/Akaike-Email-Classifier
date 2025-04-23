@@ -7,7 +7,6 @@ import uvicorn
 
 app = FastAPI()
 
-# Load your trained classifier once at startup
 model = load_model()
 logger.info("Loaded email classification model.")
 
@@ -26,16 +25,16 @@ def classify_email(request: EmailRequest) -> dict:
     original_email = request.email_body
     logger.info("Received email for classification.")
 
-    # 1. Mask PII
+    # Mask PII
     masked_email, entities = mask_pii(original_email)
     logger.debug(f"Masked email: {masked_email}")
     logger.debug(f"Masked entities: {entities}")
 
-    # 2. Predict category with local model
+    # category with local model
     category = predict_category(model, masked_email)
     logger.info(f"Predicted category: {category}")
 
-    # 3. Restore PII in masked email (optional for output)
+    #Restore PII in masked email
     demasked_email = restore_pii(masked_email, entities)
 
     return {
